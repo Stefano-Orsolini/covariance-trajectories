@@ -76,4 +76,4 @@ d1 = designfilt('bandpassiir', ...
 [params.b, params.a] = tf(d1);
 
 % function call
-RTA_visualizer(params);
+viewer_covtraj(params);
