@@ -1,4 +1,4 @@
-function RTA_visualizer(params)
+function viewer_covtraj(params)
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % Plot realtime covariance matrix as trajectories of
 % coordinates (autocov_A, autocov_B, crosscov_AB).
