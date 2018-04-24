@@ -52,7 +52,7 @@ if params.show_box
     params.events =  importdata('S_events.dat');
 end
 % signals matrix: samples-by-sources
-load('S_signals.mat');
+load('data/S_signals.mat');
 params.signals = S_signals;
 % sampling frequency
 params.Fs = 160;
