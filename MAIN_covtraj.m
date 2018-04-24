@@ -49,10 +49,10 @@ params.do_loop = true;
 
 if params.show_box
     % experimental paradigm sequence
-    params.events =  importdata('S_events.dat');
+    params.events =  importdata(fullfile('data','S_events.dat'));
 end
 % signals matrix: samples-by-sources
-load('data/S_signals.mat');
+load(fullfile('data','S_signals.mat'));
 params.signals = S_signals;
 % sampling frequency
 params.Fs = 160;
