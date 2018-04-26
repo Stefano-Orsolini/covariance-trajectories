@@ -4,34 +4,43 @@
 % AB is any unique combination of sources from an 
 % input signals matrix of size samples-by-sources.
 %
+% dependancies:
+% - FilterM (File Exchange)
+% - designfilt (Signal Processing Toolbox)
+%
 % stefano.orsolini@gmail.com
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 % analysis time window in seconds
 params.t_show = 2.0;
-
-% filter: 0 none, 1 global component removal, 2 bandpass filter
-% NOTE: these settings are exclusive, cascading is not implemented
-params.do_filt = 1;
-
+% apply global component removal
+params.do_global = true;
+% apply bandpass filter
+params.do_filter = false;
 % show crosscovariance boundary planes
 params.show_plane = true;
-
 % show indices of signals pairs
 params.show_details = false;
-
 % show signals timeseries (in another figure)
 params.show_timeseries = false;
 
 % ~~~ less relevant settings ~~~
 % set plot limits
-if params.do_filt==0
-    params.ac_lim = 3500;
-elseif params.do_filt==1
-    params.ac_lim = 500;
-elseif params.do_filt==2
-    params.ac_lim = 1000;
+if params.do_global
+    if params.do_filter
+        params.ac_lim = 100;
+    else
+        params.ac_lim = 500;
+    end
+else
+    if params.do_filter
+        params.ac_lim = 1000;
+    else
+        params.ac_lim = 3500;
+    end
 end
+
+
 % fix axes on limits
 params.fixed_axes = true;
 
@@ -57,7 +66,7 @@ params.signals = S_signals;
 % sampling frequency
 params.Fs = 160;
 
-% IIR filter parameters
+% bandpass filter parameters
 d1 = designfilt('bandpassiir', ...
     'StopbandFrequency1', 5, ...
     'PassbandFrequency1', 7, ...
