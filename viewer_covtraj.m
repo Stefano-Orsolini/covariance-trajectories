@@ -10,6 +10,8 @@ function viewer_covtraj(params)
 
 close all
 
+addpath(genpath(fullfile(userpath,'FilterM')))
+
 % total number of samples and sources
 [Nsamp, Nsour] = size(params.signals);
 
@@ -107,12 +109,12 @@ if params.show_box
 end
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-if params.do_filt ~= 0
-    % case: do_filt == 1
+if params.do_global
     % buffer of the OLS model components for global component removal
     EV = [ones(b_span,1), zeros(b_span,1)];
+end
 
-    % case: do_filt == 2
+if params.do_filter && ~params.do_global
     % transfer funtion coefficients (remove first from a)
     b = params.b.';
     a = params.a(2:end).';
@@ -139,19 +141,27 @@ while i ~= Nsamp
     s_new = params.signals(i,:);
     b_raw = [b_raw(2:end,:); s_new];
     
-    if params.do_filt == 0
+    if ~params.do_global && ~params.do_filter
         % use original signal
         b_m = b_raw;
-    elseif params.do_filt == 1
+    end
+    
+    if params.do_global
         % the global component is the spatial average value
         EV = [EV(2:end,:); 1, mean(s_new)];
         % calculate Ordinary Least Squares coefficients
         betas = (EV'*EV)\(EV'*b_raw);
         % use OLS residual
         b_m = b_raw - (EV(:,1)*betas(1,:) + EV(:,2)*betas(2,:));
-    elseif params.do_filt == 2
+        
+        if params.do_filter
+            % cascade bandpass filter
+            b_m = FiltFiltM(params.b,params.a,b_m);
+        end
+    end
+    
+    if params.do_filter && ~params.do_global
         % update filter input buffer with newest sample from signal buffer
-        %TODO: cascade where s_new = b_m(end,:);
         B_fi = [s_new.', B_fi(:,1:end-1)];
         
         % result of Moving-Average side (scalar product!)
@@ -170,7 +180,6 @@ while i ~= Nsamp
     end
     
     % covariance matrix of the signals buffer
-    %C = cov(b_m(end/2:end,:));
     C = cov(b_m);
 
     % update components buffer
@@ -316,4 +325,3 @@ set(handle,'ZLim',[-params.ac_lim params.ac_lim]);
 % box_x = fig_w*(0.13);
 % box_y = fig_h*(0.03);
 % set(slider_handle,'Position',[box_x box_y box_w box_h]);
-
