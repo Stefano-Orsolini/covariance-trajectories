@@ -155,13 +155,13 @@ while i ~= Nsamp
         b_m = b_raw - (EV(:,1)*betas(1,:) + EV(:,2)*betas(2,:));
         
         if params.do_filter
-            % cascade bandpass filter
+            % filter (not recursive)
             b_m = FiltFiltM(params.b,params.a,b_m);
         end
     end
     
     if params.do_filter && ~params.do_global
-        % update filter input buffer with newest sample from signal buffer
+        % input buffer of the filter (recursive)
         B_fi = [s_new.', B_fi(:,1:end-1)];
         
         % result of Moving-Average side (scalar product!)
