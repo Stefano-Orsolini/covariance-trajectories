@@ -39,11 +39,8 @@ else
         params.ac_lim = 3500;
     end
 end
-
-
 % fix axes on limits
 params.fixed_axes = true;
-
 % zoom locally on last samples
 params.show_local = false;
 % frames per second
