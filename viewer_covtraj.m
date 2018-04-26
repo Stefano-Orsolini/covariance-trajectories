@@ -14,27 +14,22 @@ addpath(genpath(fullfile(userpath,'FilterM')))
 
 % total number of samples and sources
 [Nsamp, Nsour] = size(params.signals);
-
 % number of trajectories
 Ntraj = ((Nsour^2)-Nsour)/2;
-
 % generate unique pairwise enumeration
 S_pairs = combnk(1:Nsour,2);
-
 % buffer size in samples
 b_span = ceil(params.t_show * params.Fs);
-
 % raw signals buffer
 b_raw = zeros(b_span,Nsour);
 % preprocessed signals buffer
 b_m = zeros(b_span,Nsour);
 % space components buffer
 b_ry = zeros(Nsour,Nsour,b_span);
-
 % instance reverse time axis in seconds
 t_b = linspace(-params.t_show,0,b_span);
 
-% instance time plot figure ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% instance timeseries figure ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if params.show_timeseries
     f1_handle = figure('Color','w');
     
@@ -44,8 +39,9 @@ if params.show_timeseries
         p1_handle(j) = plot(t_b,b_m(:,j),'LineWidth',1.5);
     end
 end
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-% instance plot3 figure ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% instance trajectories figure ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 f2_handle = figure('Color','w');
 s2_handle = subplot(1,1,1);
 
